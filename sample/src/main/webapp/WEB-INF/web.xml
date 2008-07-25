@@ -1,0 +1,28 @@
+<web-app version="2.4"
+  xmlns="http://java.sun.com/xml/ns/j2ee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" >
+
+  <display-name>java-haml Sample Application</display-name>
+  
+  <filter>
+      <filter-name>Direct Haml rendering filter</filter-name>
+      <filter-class>edu.northwestern.bioinformatics.haml.servlet.HamlFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+      <filter-name>Direct Haml rendering filter</filter-name>
+      <url-pattern>*.haml</url-pattern>
+  </filter-mapping>
+
+  <filter>
+      <filter-name>Direct Sass rendering filter</filter-name>
+      <filter-class>edu.northwestern.bioinformatics.haml.servlet.SassFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+      <filter-name>Direct Sass rendering filter</filter-name>
+      <url-pattern>*.sass</url-pattern>
+  </filter-mapping>
+
+</web-app>
