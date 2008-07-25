@@ -1,0 +1,5 @@
+artifacts:
+  jruby: "org.jruby:jruby:jar:1.1.2"
+  servlet: "javax.servlet:servlet-api:jar:2.4"
+  bsf: "bsf:bsf:jar:2.4.0"
+  jcl: "commons-logging:commons-logging:jar:1.0.4"

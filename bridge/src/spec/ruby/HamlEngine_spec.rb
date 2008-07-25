@@ -7,7 +7,7 @@ import "java.io.StringReader"
 describe 'HamlEngine' do
   describe 'from String' do
     it "can write back to an HTML string" do
-      HamlEngine.new("%p Hello").toHtml().should == "<p>Hello</p>"
+      HamlEngine.new("%p Hello").toHtml().should == "<p>Hello</p>\n"
     end
   end
 end
