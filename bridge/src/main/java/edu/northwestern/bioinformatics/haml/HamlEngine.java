@@ -1,20 +1,18 @@
 package edu.northwestern.bioinformatics.haml;
 
-import org.apache.bsf.BSFManager;
 import org.apache.bsf.BSFException;
+import org.apache.bsf.BSFManager;
 
-import java.util.Map;
 import java.util.LinkedHashMap;
-import java.io.FileReader;
-import java.io.FileNotFoundException;
-import java.io.Reader;
-import java.io.IOException;
+import java.util.Map;
 
 /**
  * This class encapsulates reading Haml input and outputting a rendered HTML stream (or String).
  * It is primarily a Java adapter class for Haml::Engine, providing a consistent mechanism
  * for accessing the copy of Haml that is embedded in this library.
+ * <p>
  *
+ * @see http://haml.hamptoncatlin.com/docs
  * @author Rhett Sutphin
  */
 public class HamlEngine {
@@ -22,6 +20,11 @@ public class HamlEngine {
     private String html;
     private Map<String, Object> options;
     private Map<String, Object> locals;
+    private Object evaluationContext;
+
+    static {
+        BSFManager.registerScriptingEngine("ruby", "org.jruby.javasupport.bsf.JRubyEngine", new String[] { "rb" });
+    }
 
     public HamlEngine(String haml) {
         this.haml = haml;
@@ -41,34 +44,36 @@ public class HamlEngine {
         return this;
     }
 
+    public HamlEngine setEvaluationContext(Object context) {
+        this.evaluationContext = context;
+        return this;
+    }
+
     ////// WRITERS
 
-    public String toHtml() {
-        BSFManager.registerScriptingEngine("ruby", "org.jruby.javasupport.bsf.JRubyEngine", new String[] { "rb" });
-        BSFManager bsf = new BSFManager();
+    public String render() {
         try {
+            BSFManager bsf = new BSFManager();
             bsf.declareBean("bridge", this, this.getClass());
-            bsf.exec("ruby", "(java)", 0, 0, loadScript("haml_bridge.rb"));
+            bsf.exec("ruby", "(java)", 0, 0, "require 'haml_bridge'");
             return this.html;
         } catch (BSFException e) {
             throw new RuntimeException("Error invoking JRuby", e);
-        } catch (IOException e) {
-            // TODO: Make specific
-            throw new RuntimeException(e);
         }
     }
 
-    private String loadScript(String name) throws IOException {
-        Reader reader = new FileReader("/Users/rsutphin/java/exp/haml-in-java/bridge/src/main/ruby/" + name);
-        char[] buf = new char[8192];
-        int size = reader.read(buf);
-        return new String(buf, 0, size);
+    public String toHtml() {
+        return render();
     }
 
     ////// SIMPLE ACCESSORS
 
     public String getHaml() {
         return haml;
+    }
+
+    public Object getEvaluationContext() {
+        return evaluationContext;
     }
 
     public Map<String, Object> getOptions() {
