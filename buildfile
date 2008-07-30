@@ -18,6 +18,7 @@ define 'java-haml' do
   define 'bridge' do
     package :jar
     test.using :rspec
+    resources.from _("src/main/ruby")
     compile.with :servlet, :jruby, :bsf, :jcl
   end
   
