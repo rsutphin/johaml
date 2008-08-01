@@ -3,26 +3,50 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" >
 
-  <display-name>java-haml Sample Application</display-name>
-  
-  <filter>
-      <filter-name>Direct Haml rendering filter</filter-name>
-      <filter-class>edu.northwestern.bioinformatics.haml.servlet.HamlFilter</filter-class>
-  </filter>
+    <display-name>java-haml Sample Application</display-name>
 
-  <filter-mapping>
-      <filter-name>Direct Haml rendering filter</filter-name>
-      <url-pattern>*.haml</url-pattern>
-  </filter-mapping>
+    <servlet>
+        <servlet-name>Haml Servlet</servlet-name>
+        <servlet-class>edu.northwestern.bioinformatics.haml.servlet.HamlServlet</servlet-class>
+        <init-param>
+            <param-name>TemplatePath</param-name>
+            <param-value>/</param-value> <!-- load from webapp public root -->
+        </init-param>
+        <init-param>
+            <param-name>Debug</param-name>
+            <param-value>Yes</param-value>
+        </init-param>
+    </servlet>
 
-  <filter>
-      <filter-name>Direct Sass rendering filter</filter-name>
-      <filter-class>edu.northwestern.bioinformatics.haml.servlet.SassFilter</filter-class>
-  </filter>
+    <servlet-mapping>
+        <servlet-name>Haml Servlet</servlet-name>
+        <url-pattern>*.haml</url-pattern>
+    </servlet-mapping>
 
-  <filter-mapping>
-      <filter-name>Direct Sass rendering filter</filter-name>
-      <url-pattern>*.sass</url-pattern>
-  </filter-mapping>
+    <!--
+    <servlet>
+        <servlet-name>Sass Servlet</servlet-name>
+        <servlet-class>edu.northwestern.bioinformatics.haml.servlet.SassServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Sass Servlet</servlet-name>
+        <url-pattern>*.sass</url-pattern>
+    </servlet-mapping>
+    -->
+
+    <servlet>
+        <servlet-name>Freemarker</servlet-name>
+        <servlet-class>freemarker.ext.servlet.FreemarkerServlet</servlet-class>
+        <init-param>
+            <param-name>TemplatePath</param-name>
+            <param-value>/</param-value> <!-- load from webapp public root -->
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Freemarker</servlet-name>
+        <url-pattern>*.fm</url-pattern>
+    </servlet-mapping>
 
 </web-app>

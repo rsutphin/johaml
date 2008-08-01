@@ -2,6 +2,8 @@ package edu.northwestern.bioinformatics.haml;
 
 import org.apache.bsf.BSFException;
 import org.apache.bsf.BSFManager;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -16,6 +18,8 @@ import java.util.Map;
  * @author Rhett Sutphin
  */
 public class HamlEngine {
+    private static final Log log = LogFactory.getLog(HamlEngine.class);
+
     private String haml;
     private String html;
     private Map<String, Object> options;
@@ -56,8 +60,12 @@ public class HamlEngine {
             BSFManager bsf = new BSFManager();
             bsf.declareBean("bridge", this, this.getClass());
             bsf.exec("ruby", "(java)", 0, 0, "require 'haml_bridge'");
+//            bsf.exec("ruby", "(java)", 0, 0, "$bridge.html = 'foo'");
             return this.html;
         } catch (BSFException e) {
+            if (e.getTargetException() != null) {
+                log.error("There was a BSF exception invoking jruby which is about to be rethrown.  The BSFException's cause was the attached " + e.getTargetException().getClass().getName() + '.', e.getTargetException());
+            }
             throw new RuntimeException("Error invoking JRuby", e);
         }
     }
