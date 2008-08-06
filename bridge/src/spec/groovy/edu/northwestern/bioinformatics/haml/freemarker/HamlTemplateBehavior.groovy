@@ -1,6 +1,5 @@
 import edu.northwestern.bioinformatics.haml.freemarker.HamlFreeMarkerConfiguration
 import edu.northwestern.bioinformatics.haml.freemarker.HamlTemplate
-import freemarker.template.TemplateHashModel
 import freemarker.template.SimpleHash
 
 before "create config", {

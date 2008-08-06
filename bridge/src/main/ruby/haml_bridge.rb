@@ -1,5 +1,7 @@
+# Haml fails when attempting to determine its version number inside the JAR, so set it explicitly
+module Haml; VERSION = '2.0.2'; end
 # TODO: obvious
-$LOAD_PATH << '/Library/Ruby/Gems/1.8/gems/haml-2.0.0/lib';
+$LOAD_PATH << 'haml-2.0.2/lib';
 
 require 'haml';
 $bridge.requires.each { |r| require r }

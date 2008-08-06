@@ -14,8 +14,8 @@ it "can access locals", {
 
 it "obeys format option", {
   haml = """
-    %br
-    %span etc
+%br
+%span etc
   """
   new HamlEngine(haml).addOption("format", "html5").toHtml().shouldEqual "<br>\n<span>etc</span>\n"
   new HamlEngine(haml).addOption("format", "xhtml").toHtml().shouldEqual "<br />\n<span>etc</span>\n"
@@ -23,8 +23,8 @@ it "obeys format option", {
 
 it "evaluates logic", {
   haml = """
-    - colors.each do |c|
-      .color= c
+- colors.each do |c|
+  .color= c
   """
   new HamlEngine(haml).addLocal("colors", ["red", "blue", "green"]).render().shouldEqual(
     "<div class='color'>red</div>\n<div class='color'>blue</div>\n<div class='color'>green</div>\n")

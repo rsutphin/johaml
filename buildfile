@@ -3,7 +3,9 @@ require 'buildr/jetty'
 
 repositories.remote << 'http://www.ibiblio.org/maven2'
 
-HAML_VERSION = '2.0.1'
+# URL will change when the version changes (not just the version number)
+HAML_VERSION = '2.0.2'
+HAML_ZIP_URL = "http://rubyforge.org/frs/download.php/40512/haml-2.0.2.zip"
 
 # TODO: how to do this in build.yml?
 LOGBACK = group(%w{log4j-bridge logback-core logback-classic},
@@ -24,9 +26,24 @@ define 'java-haml' do
   
   define 'bridge' do
     test.using :easyb
-    resources.from _("src/main/ruby")
+    
+    # Preferred option, but it doesn't work due to BUILDR-106 (will fixed in 1.3.3)
+    # haml = download(
+    #   artifact("com.hamptoncatlin.haml:haml:zip:#{HAML_VERSION}") => HAML_ZIP_URL)
+    tmpfile = _("target/haml-#{HAML_VERSION}.zip")
+    download(tmpfile => HAML_ZIP_URL).invoke
+    haml = artifact("com.hamptoncatlin.haml:haml:zip:#{HAML_VERSION}").from(tmpfile)
+    haml_dir = unzip(_("target/resources/haml-#{HAML_VERSION}") => haml).from_path("haml-#{HAML_VERSION}").target
+    haml_dir.invoke
+    
+    resources.from _("src/main/ruby") #, "#{haml_dir}/lib"
+    # resources.enhance do
+    #   %w(MIT-LICENSE VERSION REVISION).each do |name|
+    #     cp "#{haml_dir}/#{name}", _("target/resources/Haml_#{name}")
+    #   end
+    # end
 
-    # Hopefully this won't be necessary after 1.1.4
+    # Hopefully this won't be necessary after JRuby 1.1.4
     custom_jruby = artifact("edu.northwestern.bioinformatics.jruby:patched-jruby-complete:jar:1.1.3").
       from(_('lib/patched-jruby-complete-1.1.3.jar'))
 
