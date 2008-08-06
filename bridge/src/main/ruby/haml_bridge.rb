@@ -1,9 +1,9 @@
-# Haml fails when attempting to determine its version number inside the JAR, so set it explicitly
-module Haml; VERSION = '@HAML_VERSION@'; end
-# TODO: obvious
 $LOAD_PATH << 'haml-@HAML_VERSION@/lib';
 
+# Haml fails when attempting to determine its version number inside the JAR, so set it explicitly
+module Haml; VERSION = '@HAML_VERSION@'; end
 require 'haml';
+
 $bridge.requires.each { |r| require r }
 
 # Haml wants these to be actual ruby hashes
