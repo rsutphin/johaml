@@ -23,11 +23,11 @@ define 'java-haml' do
   end
   
   define 'bridge' do
-    test.using :rspec
+    test.using :easyb
     resources.from _("src/main/ruby")
 
     # Hopefully this won't be necessary after 1.1.4
-    custom_jruby = artifact("ed.northwestern.bioinformatics.jruby:patched-jruby-complete:jar:1.1.3").
+    custom_jruby = artifact("edu.northwestern.bioinformatics.jruby:patched-jruby-complete:jar:1.1.3").
       from(_('lib/patched-jruby-complete-1.1.3.jar'))
 
     compile.with :servlet, custom_jruby, :bsf, :jcl, :jcio, :freemarker

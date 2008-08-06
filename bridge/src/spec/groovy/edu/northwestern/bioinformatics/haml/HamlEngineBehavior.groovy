@@ -46,10 +46,10 @@ it "accepts local variable definitions", {
 
 it "accepts option definitions", {
   engine = new HamlEngine("foo")
-  engine.addOption("output", "html5")
+  engine.addOption("format", "html5")
   engine.options.size().shouldBe 1
   ensure(engine.options) {
-    has(output: "html5")
+    has(format: "html5")
   }
 }
 

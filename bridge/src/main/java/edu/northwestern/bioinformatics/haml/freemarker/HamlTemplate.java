@@ -6,6 +6,7 @@ import freemarker.template.ObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateNodeModel;
+import freemarker.template.TemplateHashModel;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,12 +27,17 @@ public class HamlTemplate extends Template {
     public HamlTemplate(String name, Reader reader, Configuration configuration) throws IOException {
         super(name, new StringReader(""), configuration);
         String text = IOUtils.toString(reader);
-        engine = new HamlEngine(text);
+        engine = new HamlEngine(text).addRequire("freemarker/template_model_context");
         setCustomAttribute("content_type", "text/html");
     }
 
     @Override
     public void process(Object rootNode, Writer writer) throws TemplateException, IOException {
+        if (rootNode instanceof TemplateHashModel) {
+            TemplateHashModel model = (TemplateHashModel) rootNode;
+            engine.setEvaluationContextExpression("TemplateModelContext.new($bridge.evaluationContext)")
+                .setEvaluationContext(model);
+        }
         String out = engine.render();
         writer.write(out);
         writer.flush();

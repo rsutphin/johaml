@@ -1,7 +1,23 @@
 %html
   %head
     %title Hello, World
-    / %link{ :href => "hello.sass", :rel => 'stylesheet' }
+    %link{ :href => "hello.sass", :rel => 'stylesheet' }
   %body
     %h1 Hi there
     %p Hello, world
+    - if params.size > 0
+      %h2 Request params
+      %h3 By pairs
+      %dl
+        - params.each do |p|
+          %dt
+            &= p.first
+          %dd
+            &= p.last
+      %h3 By key bracket access
+      %dl
+        - params.keys.each do |k|
+          %dt
+            &= k
+          %dd
+            &= params[k]
