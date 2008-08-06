@@ -26,22 +26,21 @@ define 'java-haml' do
   
   define 'bridge' do
     test.using :easyb
-    
-    # Preferred option, but it doesn't work due to BUILDR-106 (will fixed in 1.3.3)
-    # haml = download(
-    #   artifact("com.hamptoncatlin.haml:haml:zip:#{HAML_VERSION}") => HAML_ZIP_URL)
-    tmpfile = _("target/haml-#{HAML_VERSION}.zip")
-    download(tmpfile => HAML_ZIP_URL).invoke
-    haml = artifact("com.hamptoncatlin.haml:haml:zip:#{HAML_VERSION}").from(tmpfile)
-    haml_dir = unzip(_("target/resources/haml-#{HAML_VERSION}") => haml).from_path("haml-#{HAML_VERSION}").target
-    haml_dir.invoke
-    
-    resources.from _("src/main/ruby") #, "#{haml_dir}/lib"
-    # resources.enhance do
-    #   %w(MIT-LICENSE VERSION REVISION).each do |name|
-    #     cp "#{haml_dir}/#{name}", _("target/resources/Haml_#{name}")
-    #   end
-    # end
+
+    resources.enhance do
+      # Preferred option, but it doesn't work due to BUILDR-106 (will fixed in 1.3.3)
+      # haml = download(
+      #   artifact("com.hamptoncatlin.haml:haml:zip:#{HAML_VERSION}") => HAML_ZIP_URL)
+      tmpfile = _("target/haml-#{HAML_VERSION}.zip")
+      download(tmpfile => HAML_ZIP_URL).invoke
+      haml = artifact("com.hamptoncatlin.haml:haml:zip:#{HAML_VERSION}").from(tmpfile)
+
+      haml_dir = unzip(_("target/resources/haml-#{HAML_VERSION}") => haml).from_path("haml-#{HAML_VERSION}").target
+      haml_dir.invoke
+    end
+
+    resources.filter.using :ant, 'HAML_VERSION' => HAML_VERSION
+    resources.from _("src/main/ruby")
 
     # Hopefully this won't be necessary after JRuby 1.1.4
     custom_jruby = artifact("edu.northwestern.bioinformatics.jruby:patched-jruby-complete:jar:1.1.3").

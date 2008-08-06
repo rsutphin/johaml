@@ -1,7 +1,7 @@
 # Haml fails when attempting to determine its version number inside the JAR, so set it explicitly
-module Haml; VERSION = '2.0.2'; end
+module Haml; VERSION = '@HAML_VERSION@'; end
 # TODO: obvious
-$LOAD_PATH << 'haml-2.0.2/lib';
+$LOAD_PATH << 'haml-@HAML_VERSION@/lib';
 
 require 'haml';
 $bridge.requires.each { |r| require r }
