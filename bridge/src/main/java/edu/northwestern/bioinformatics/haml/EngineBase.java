@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * @author Rhett Sutphin
  */
-public abstract class EngineBase<S extends EngineBase> {
+public abstract class EngineBase<S extends EngineBase<S>> {
     protected final Log log = LogFactory.getLog(getClass());
 
     private Map<String, Object> options;
@@ -36,6 +36,7 @@ public abstract class EngineBase<S extends EngineBase> {
 
     ////// CHAINABLE CONFIGURATION
 
+    @SuppressWarnings({ "unchecked" })
     public S addOption(String name, Object value) {
         getOptions().put(name, value);
         return (S) this;
@@ -50,6 +51,7 @@ public abstract class EngineBase<S extends EngineBase> {
      * @param value
      * @return this object (for chaining)
      */
+    @SuppressWarnings({ "unchecked" })
     public S addRequire(String requireName) {
         getRequires().add(requireName);
         return (S) this;
