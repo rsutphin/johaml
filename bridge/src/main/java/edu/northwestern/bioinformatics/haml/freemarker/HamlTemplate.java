@@ -2,35 +2,33 @@ package edu.northwestern.bioinformatics.haml.freemarker;
 
 import edu.northwestern.bioinformatics.haml.HamlEngine;
 import freemarker.template.Configuration;
-import freemarker.template.ObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import freemarker.template.TemplateNodeModel;
 import freemarker.template.TemplateHashModel;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.io.StringReader;
 import java.io.Writer;
 
 /**
  * @author Rhett Sutphin
  */
-public class HamlTemplate extends Template {
-    private static final Log log = LogFactory.getLog(HamlTemplate.class);
-
-    private HamlEngine engine;
+public class HamlTemplate extends TemplateBase<HamlEngine> {
 
     public HamlTemplate(String name, Reader reader, Configuration configuration) throws IOException {
-        super(name, new StringReader(""), configuration);
-        String text = IOUtils.toString(reader);
-        engine = new HamlEngine(text).
+        super(name, reader, configuration);
+    }
+
+    @Override
+    protected HamlEngine createEngine(String filename, String text) {
+        return new HamlEngine(text).
             addRequire("freemarker/template_model_context").
-            addOption("filename", name);
-        setCustomAttribute("content_type", "text/html");
+            addOption("filename", filename);
+    }
+
+    @Override
+    protected String getContentType() {
+        return "text/html";
     }
 
     @Override
@@ -40,20 +38,12 @@ public class HamlTemplate extends Template {
             engine.setEvaluationContextExpression("TemplateModelContext.new($bridge.evaluationContext)")
                 .setEvaluationContext(model);
         }
-        String out = engine.render();
-        writer.write(out);
-        writer.flush();
+        super.process(rootNode, writer);
     }
 
-    @Override
-    public void process(Object o, Writer writer, ObjectWrapper objectWrapper) throws TemplateException, IOException {
-        log.warn("objectWrapper is ignored for this implementation");
-        this.process(o, writer);
-    }
-
-    @Override
-    public void process(Object o, Writer writer, ObjectWrapper objectWrapper, TemplateNodeModel templateNodeModel) throws TemplateException, IOException {
-        log.warn("objectWrapper & templateNodeModel are ignored for this implementation");
-        this.process(o, writer);
-    }
+    public static final TemplateCreator CREATOR = new TemplateCreator() {
+        public Template createTemplate(String name, Reader r, Configuration configuration) throws IOException {
+            return new HamlTemplate(name, r, configuration);
+        }
+    };
 }
