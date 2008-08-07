@@ -22,4 +22,4 @@ evalContext =
     Object.new
   end
 
-$bridge.html = Haml::Engine.new($bridge.haml, options).render(evalContext, locals)
+$bridge.renderedContent = Haml::Engine.new($bridge.template, options).render(evalContext, locals)

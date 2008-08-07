@@ -27,7 +27,9 @@ public class HamlTemplate extends Template {
     public HamlTemplate(String name, Reader reader, Configuration configuration) throws IOException {
         super(name, new StringReader(""), configuration);
         String text = IOUtils.toString(reader);
-        engine = new HamlEngine(text).addRequire("freemarker/template_model_context");
+        engine = new HamlEngine(text).
+            addRequire("freemarker/template_model_context").
+            addOption("filename", name);
         setCustomAttribute("content_type", "text/html");
     }
 
