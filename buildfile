@@ -20,13 +20,11 @@ define 'java-haml' do
   compile.options.target = '1.5'
   
   define 'sample' do
-    compile.with LOGBACK, SLF4J
+    compile.with LOGBACK, SLF4J, :string_taglib, :jclang
     package(:war).with :libs => [ compile.dependencies, project('bridge'), project('bridge').compile.dependencies ]
   end
   
   define 'bridge' do
-    test.using :easyb
-
     resources.enhance do
       # Preferred option, but it doesn't work due to BUILDR-106 (will fixed in 1.3.3)
       # haml = download(
@@ -45,12 +43,22 @@ define 'java-haml' do
     # Hopefully this won't be necessary after JRuby 1.1.4
     custom_jruby = artifact("edu.northwestern.bioinformatics.jruby:patched-jruby-complete:jar:1.1.3").
       from(_('lib/patched-jruby-complete-1.1.3.jar'))
+    compile.with :servlet, :jsp_api, custom_jruby, :bsf, :jcl, :jcio, :freemarker
+    
+    test.using :easyb
+    test.with :string_taglib, :spring_mock, :spring, :jclang
+    test.resources.enhance do
+      dir = _("target/resources/test/WEB-INF/lib")
+      mkdir_p dir
+      test.dependencies.map(&:to_s).grep(/jar$/).each do |f|
+        cp f, File.join(dir, File.basename(f))
+      end
+    end
 
-    compile.with :servlet, custom_jruby, :bsf, :jcl, :jcio, :freemarker
-    package(:jar).include(_("target/resources/**/*"))
+    package(:jar).include(_("target/resources/**/*")).exclude(_("target/resources/test/**/*"))
   end
-  
-  task 'start' => [project('sample').package(:war), jetty.use] do |t|
-    jetty.deploy 'http://localhost:8080/', t.prerequisites.first
-  end
+end
+
+task 'samples' => [project('java-haml:sample').package(:war), jetty.use] do |t|
+  jetty.deploy 'http://localhost:8080/', t.prerequisites.first
 end

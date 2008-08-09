@@ -35,7 +35,7 @@ public class HamlTemplate extends TemplateBase<HamlEngine> {
     public void process(Object rootNode, Writer writer) throws TemplateException, IOException {
         if (rootNode instanceof TemplateHashModel) {
             TemplateHashModel model = (TemplateHashModel) rootNode;
-            engine.setEvaluationContextExpression("TemplateModelContext.new($bridge.evaluationContext)")
+            engine.setEvaluationContextExpression("Freemarker::TemplateModelContext.new($bridge.evaluationContext)")
                 .setEvaluationContext(model);
         }
         super.process(rootNode, writer);

@@ -1,9 +1,37 @@
 import edu.northwestern.bioinformatics.haml.freemarker.HamlFreeMarkerConfiguration
 import edu.northwestern.bioinformatics.haml.freemarker.HamlTemplate
+
 import freemarker.template.SimpleHash
+import freemarker.template.ObjectWrapper
+import freemarker.ext.jsp.TaglibFactory
+import freemarker.ext.servlet.ServletContextHashModel
+import freemarker.ext.servlet.HttpRequestHashModel
+
+import org.springframework.core.io.FileSystemResourceLoader
+import org.springframework.mock.web.MockServletContext
+import org.springframework.mock.web.MockHttpServletRequest
+import org.springframework.mock.web.MockHttpServletResponse
+import org.springframework.mock.web.MockServletConfig
+
+import javax.servlet.ServletRequest
+import javax.servlet.ServletResponse
+import javax.servlet.GenericServlet
+
+class MockServlet extends GenericServlet {
+  public void service(ServletRequest servletRequest, ServletResponse servletResponse) {
+    throw new UnsupportedOperationException("service not implemented");
+  }
+}
 
 before "create config", {
-  configuration = new HamlFreeMarkerConfiguration()
+  configuration = new HamlFreeMarkerConfiguration(HamlTemplate.CREATOR)
+  request = new MockHttpServletRequest();
+  response = new MockHttpServletResponse();
+  servletContext = new MockServletContext("bridge/target/resources/test", new FileSystemResourceLoader())
+  servletConfig = new MockServletConfig(servletContext)
+  servlet = new MockServlet()
+  servlet.init(servletConfig)
+  taglibFactory = new TaglibFactory(servletContext)
 }
 
 def createTemplate(haml) {
@@ -59,6 +87,26 @@ it "exposes 'Application' root node key as 'application'", {
   rendered("%b= application['foo']", root).shouldBe "<b>bar</b>\n"
 }
 
+it "exposes taglibs via the jsp_taglibs lookup", {
+  root = new SimpleHash()
+  root.put("JspTaglibs", [ foo: "bar" ])
+  // just checking for no exception
+  rendered("- tags = jsp_taglibs['foo']", root)
+}
+
+it "executes simple, no-body tags from taglibs", {
+  root = new SimpleHash()
+  root.put("JspTaglibs", taglibFactory)
+  root.put("Application", new ServletContextHashModel(servlet, ObjectWrapper.DEFAULT_WRAPPER))
+  root.put("Request", new HttpRequestHashModel(request, response, ObjectWrapper.DEFAULT_WRAPPER))
+  haml = """
+- Str = jsp_taglibs['http://jakarta.apache.org/taglibs/string-1.1']
+.fib= Str.join(:items => [1, 1, 2, 3, 5, 8].to_java(), :separator => " - ")
+"""
+  rendered(haml, root).shouldBe "<div class='fib'>1 - 1 - 2 - 3 - 5 - 8</div>\n"
+}
+
+/* TODO: reenable when the verbose logging is suppressed
 it "gives a reasonable error message when attempting to resolve an unknown key", {
   try {
     rendered("%em= bogon", new SimpleHash())
@@ -66,3 +114,4 @@ it "gives a reasonable error message when attempting to resolve an unknown key",
     re.getMessage().shouldHave "No value in page model named 'bogon'"
   }
 }
+*/

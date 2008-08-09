@@ -1,12 +1,6 @@
 package edu.northwestern.bioinformatics.haml;
 
-import org.apache.bsf.BSFException;
-import org.apache.bsf.BSFManager;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.Map;
 
 /**

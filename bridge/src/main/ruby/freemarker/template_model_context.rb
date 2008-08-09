@@ -1,17 +1,28 @@
 require 'blank_slate'
 require 'freemarker/rubyize_freemarker_collections'
+require 'freemarker/callable_taglib'
+
+module Freemarker
 
 class TemplateModelContext < BlankSlate
-  def initialize(template_hash_model, constant_keys = nil)
+  attr_reader :jsp_taglibs
+
+  def initialize(template_hash_model)
     @lookup = template_hash_model
-    # Untested, so leave it out for now
-#    if constant_keys
-#      class << self
-#        constant_keys.each do |k|
-#          define_method(k.downcase.to_sym) { @lookup.get(k) }
-#        end
-#      end
-#    end
+    fm_taglib_factory = @lookup.get("JspTaglibs")
+    @jsp_taglibs =
+      if fm_taglib_factory
+        class << fm_taglib_factory
+          alias :original_bracket :[]
+
+          def [](taglib_uri)
+            CallableTaglib.new(self.original_bracket(taglib_uri))
+          end
+        end
+        fm_taglib_factory
+      else
+        { }
+      end
   end
 
   # These keys are included in the context passed by FreemarkerServlet, but have the form
@@ -34,3 +45,5 @@ class TemplateModelContext < BlankSlate
     raise "No value in page model named '#{method}'"
   end
 end
+
+end # module

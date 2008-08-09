@@ -24,7 +24,6 @@ public abstract class EngineBase<S extends EngineBase<S>> {
     private String template;
 
     static {
-        // TODO: ensure this happens only once, maybe.
         BSFManager.registerScriptingEngine("ruby", "org.jruby.javasupport.bsf.JRubyEngine", new String[] { "rb" });
     }
 
