@@ -27,7 +27,7 @@ before "create config", {
   configuration = new HamlFreeMarkerConfiguration(HamlTemplate.CREATOR)
   request = new MockHttpServletRequest();
   response = new MockHttpServletResponse();
-  servletContext = new MockServletContext("bridge/target/resources/test", new FileSystemResourceLoader())
+  servletContext = new MockServletContext("bridge/target/spec/resources", new FileSystemResourceLoader())
   servletConfig = new MockServletConfig(servletContext)
   servlet = new MockServlet()
   servlet.init(servletConfig)
@@ -144,6 +144,16 @@ it "executes nested JSP tags", {
 """
   rendered(haml, tagCompatibleRoot()).shouldBe "<em>\n\npalindrome  \nRAC ECAr  \nis  </em>\n"
 }
+
+/* PENDING
+it "executes tagfiles", {
+  pending
+  haml = """
+- Tags = jsp_taglibs['/WEB-INF/tags']
+%p= Tags.pluralize(:count => 4, :name => 'duck')
+"""
+  rendered(haml, tagCompatibleRoot()).shouldBe "<p>4 ducks</p>\n"
+}*/
 
 /* TODO: reenable when the verbose logging is suppressed
 it "gives a reasonable error message when attempting to resolve an unknown key", {

@@ -48,14 +48,14 @@ define 'java-haml' do
     test.using :easyb
     test.with :string_taglib, :spring_mock, :spring, :jclang
     test.resources.enhance do
-      dir = _("target/resources/test/WEB-INF/lib")
+      dir = _("target/spec/resources/WEB-INF/lib")
       mkdir_p dir
       test.dependencies.map(&:to_s).grep(/jar$/).each do |f|
         cp f, File.join(dir, File.basename(f))
       end
     end
 
-    package(:jar).include(_("target/resources/**/*")).exclude(_("target/resources/test/**/*"))
+    package(:jar).include(_("target/resources/**/*")).exclude(_("target/spec/**/*"))
   end
 end
 
