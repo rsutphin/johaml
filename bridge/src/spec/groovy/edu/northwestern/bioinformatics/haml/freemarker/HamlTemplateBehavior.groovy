@@ -94,16 +94,55 @@ it "exposes taglibs via the jsp_taglibs lookup", {
   rendered("- tags = jsp_taglibs['foo']", root)
 }
 
-it "executes simple, no-body tags from taglibs", {
+def tagCompatibleRoot() {
   root = new SimpleHash()
   root.put("JspTaglibs", taglibFactory)
   root.put("Application", new ServletContextHashModel(servlet, ObjectWrapper.DEFAULT_WRAPPER))
   root.put("Request", new HttpRequestHashModel(request, response, ObjectWrapper.DEFAULT_WRAPPER))
+  return root
+}
+
+it "executes simple, no-body tags from taglibs", {
   haml = """
 - Str = jsp_taglibs['http://jakarta.apache.org/taglibs/string-1.1']
 .fib= Str.join(:items => [1, 1, 2, 3, 5, 8].to_java(), :separator => " - ")
 """
-  rendered(haml, root).shouldBe "<div class='fib'>1 - 1 - 2 - 3 - 5 - 8</div>\n"
+  rendered(haml, tagCompatibleRoot()).shouldBe "<div class='fib'>1 - 1 - 2 - 3 - 5 - 8</div>\n"
+}
+
+it "executes JSP tags with a single-execution body", {
+  haml = """
+- Str = jsp_taglibs['http://jakarta.apache.org/taglibs/string-1.1']
+%em
+  - Str.reverse do
+    Race car
+"""
+  rendered(haml, tagCompatibleRoot()).shouldBe "<em>\n\nrac ecaR  </em>\n"
+}
+
+it "executes consecutive JSP tags", {
+  haml = """
+- Str = jsp_taglibs['http://jakarta.apache.org/taglibs/string-1.1']
+%em
+  - Str.upperCase do
+    quiet
+  - Str.swapCase do
+    Loud
+"""
+  rendered(haml, tagCompatibleRoot()).shouldBe "<em>\n  QUIET\n  lOUD\n</em>\n"
+}
+
+it "executes nested JSP tags", {
+  haml = """
+- Str = jsp_taglibs['http://jakarta.apache.org/taglibs/string-1.1']
+%em
+  - Str.reverse do
+    si
+    - Str.swapCase do
+      Race car
+    emordnilap
+"""
+  rendered(haml, tagCompatibleRoot()).shouldBe "<em>\n\npalindrome  \nRAC ECAr  \nis  </em>\n"
 }
 
 /* TODO: reenable when the verbose logging is suppressed

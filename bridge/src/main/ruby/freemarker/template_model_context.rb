@@ -4,25 +4,17 @@ require 'freemarker/callable_taglib'
 
 module Freemarker
 
+# Note: this class contains helpers for servlet-specific TemplateHashModels.  It might be better to
+# move those bits to a subclass (or rename this class).
 class TemplateModelContext < BlankSlate
   attr_reader :jsp_taglibs
 
   def initialize(template_hash_model)
     @lookup = template_hash_model
     fm_taglib_factory = @lookup.get("JspTaglibs")
-    @jsp_taglibs =
-      if fm_taglib_factory
-        class << fm_taglib_factory
-          alias :original_bracket :[]
-
-          def [](taglib_uri)
-            CallableTaglib.new(self.original_bracket(taglib_uri))
-          end
-        end
-        fm_taglib_factory
-      else
-        { }
-      end
+    if fm_taglib_factory
+      @jsp_taglibs = CallableTaglibFactory.new(fm_taglib_factory, self)
+    end
   end
 
   # These keys are included in the context passed by FreemarkerServlet, but have the form
