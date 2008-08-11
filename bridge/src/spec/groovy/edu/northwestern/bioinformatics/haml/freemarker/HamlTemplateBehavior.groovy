@@ -102,7 +102,7 @@ def tagCompatibleRoot() {
   return root
 }
 
-it "executes simple, no-body tags from taglibs", {
+it "executes simple, no-body tags from compiled taglibs", {
   haml = """
 - Str = jsp_taglibs['http://jakarta.apache.org/taglibs/string-1.1']
 .fib= Str.join(:items => [1, 1, 2, 3, 5, 8].to_java(), :separator => " - ")
@@ -110,7 +110,7 @@ it "executes simple, no-body tags from taglibs", {
   rendered(haml, tagCompatibleRoot()).shouldBe "<div class='fib'>1 - 1 - 2 - 3 - 5 - 8</div>\n"
 }
 
-it "executes JSP tags with a single-execution body", {
+it "executes compiled JSP tags with a single-execution body", {
   haml = """
 - Str = jsp_taglibs['http://jakarta.apache.org/taglibs/string-1.1']
 %em
