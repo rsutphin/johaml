@@ -1,12 +1,12 @@
 package freemarker.core;
 
-import edu.northwestern.bioinformatics.haml.EngineBase;
+import edu.northwestern.bioinformatics.johaml.EngineBase;
 import freemarker.template.TemplateException;
 
 import java.io.IOException;
 
 /**
- * Adapter element for allowing {@link edu.northwestern.bioinformatics.haml.freemarker.TemplateBase}
+ * Adapter element for allowing {@link edu.northwestern.bioinformatics.johaml.freemarker.TemplateBase}
  * subclasses to execute in the context of a Freemarker {@link Environment}.
  * <p>
  * Ideally this would be in <code>edu.northwestern.bioinformatics.haml.freemarker</code>; however,

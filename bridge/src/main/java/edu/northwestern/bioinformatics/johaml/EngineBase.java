@@ -1,4 +1,4 @@
-package edu.northwestern.bioinformatics.haml;
+package edu.northwestern.bioinformatics.johaml;
 
 import org.apache.bsf.BSFException;
 import org.apache.bsf.BSFManager;

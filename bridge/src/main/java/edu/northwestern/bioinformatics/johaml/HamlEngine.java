@@ -1,4 +1,4 @@
-package edu.northwestern.bioinformatics.haml;
+package edu.northwestern.bioinformatics.johaml;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

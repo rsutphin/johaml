@@ -1,4 +1,4 @@
-import edu.northwestern.bioinformatics.haml.SassEngine
+import edu.northwestern.bioinformatics.johaml.SassEngine
 
 it "converts to CSS", {
   new SassEngine("p\n  :border 1px solid blue").render().shouldBe "p {\n  border: 1px solid blue; }\n"

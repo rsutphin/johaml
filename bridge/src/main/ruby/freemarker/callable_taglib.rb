@@ -37,7 +37,7 @@ class CallableTaglib < BlankSlate
   def __execute_tag(tag, options, &body)
     out =
       if block_given?
-        eval("Java::EduNorthwesternBioinformaticsHamlFreemarker::HamlBufferWriter.new(_hamlout)", body.binding)
+        eval("Java::EduNorthwesternBioinformaticsJohamlFreemarker::HamlBufferWriter.new(_hamlout)", body.binding)
       else
         Java::JavaIo::StringWriter.new
       end

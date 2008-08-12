@@ -1,7 +1,7 @@
-package edu.northwestern.bioinformatics.haml.servlet;
+package edu.northwestern.bioinformatics.johaml.servlet;
 
-import edu.northwestern.bioinformatics.haml.freemarker.HamlFreeMarkerConfiguration;
-import edu.northwestern.bioinformatics.haml.freemarker.HamlTemplate;
+import edu.northwestern.bioinformatics.johaml.freemarker.HamlFreeMarkerConfiguration;
+import edu.northwestern.bioinformatics.johaml.freemarker.HamlTemplate;
 import freemarker.ext.servlet.FreemarkerServlet;
 import freemarker.template.Configuration;
 

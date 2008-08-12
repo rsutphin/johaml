@@ -14,9 +14,9 @@ SLF4J = group('slf4j-api', 'jcl104-over-slf4j',
   :under => "org.slf4j", :version => "1.4.2")
 
 desc "A bridge library for using Haml & Sass as view-layer code in java applications"
-define 'java-haml' do
+define 'johaml' do
   project.version = '0.0'
-  project.group = 'edu.northwestern.bioinformatics.haml'
+  project.group = 'edu.northwestern.bioinformatics.johaml'
   compile.options.target = '1.5'
   
   define 'sample' do
@@ -59,6 +59,6 @@ define 'java-haml' do
   end
 end
 
-task 'samples' => [project('java-haml:sample').package(:war), jetty.use] do |t|
+task 'samples' => [project('johaml:sample').package(:war), jetty.use] do |t|
   jetty.deploy 'http://localhost:8080/', t.prerequisites.first
 end

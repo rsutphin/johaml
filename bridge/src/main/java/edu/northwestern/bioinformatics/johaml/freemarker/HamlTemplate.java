@@ -1,6 +1,6 @@
-package edu.northwestern.bioinformatics.haml.freemarker;
+package edu.northwestern.bioinformatics.johaml.freemarker;
 
-import edu.northwestern.bioinformatics.haml.HamlEngine;
+import edu.northwestern.bioinformatics.johaml.HamlEngine;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;

@@ -1,4 +1,4 @@
-package edu.northwestern.bioinformatics.haml.freemarker;
+package edu.northwestern.bioinformatics.johaml.freemarker;
 
 import freemarker.template.Template;
 

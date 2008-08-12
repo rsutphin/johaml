@@ -1,5 +1,5 @@
-import edu.northwestern.bioinformatics.haml.freemarker.HamlFreeMarkerConfiguration
-import edu.northwestern.bioinformatics.haml.freemarker.SassTemplate
+import edu.northwestern.bioinformatics.johaml.freemarker.HamlFreeMarkerConfiguration
+import edu.northwestern.bioinformatics.johaml.freemarker.SassTemplate
 
 before "create config", {
   configuration = new HamlFreeMarkerConfiguration(SassTemplate.CREATOR)

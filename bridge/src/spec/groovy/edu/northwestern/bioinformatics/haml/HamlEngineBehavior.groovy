@@ -1,4 +1,4 @@
-import edu.northwestern.bioinformatics.haml.HamlEngine
+import edu.northwestern.bioinformatics.johaml.HamlEngine
 
 it "converts to an HTML string", {
   new HamlEngine("%p Hello").toHtml().shouldBe "<p>Hello</p>\n"

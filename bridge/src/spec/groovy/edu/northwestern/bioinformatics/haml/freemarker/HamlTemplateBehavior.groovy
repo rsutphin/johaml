@@ -1,5 +1,5 @@
-import edu.northwestern.bioinformatics.haml.freemarker.HamlFreeMarkerConfiguration
-import edu.northwestern.bioinformatics.haml.freemarker.HamlTemplate
+import edu.northwestern.bioinformatics.johaml.freemarker.HamlFreeMarkerConfiguration
+import edu.northwestern.bioinformatics.johaml.freemarker.HamlTemplate
 
 import freemarker.template.SimpleHash
 import freemarker.template.ObjectWrapper
