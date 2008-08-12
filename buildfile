@@ -1,5 +1,6 @@
 require 'buildr'
 require 'buildr/jetty'
+require File.dirname(__FILE__) + "/buildr-patches"
 
 repositories.remote << 'http://www.ibiblio.org/maven2'
 
@@ -26,12 +27,8 @@ define 'johaml' do
   
   define 'bridge' do
     resources.enhance do
-      # Preferred option, but it doesn't work due to BUILDR-106 (will fixed in 1.3.3)
-      # haml = download(
-      #   artifact("com.hamptoncatlin.haml:haml:zip:#{HAML_VERSION}") => HAML_ZIP_URL)
-      tmpfile = _("target/haml-#{HAML_VERSION}.zip")
-      download(tmpfile => HAML_ZIP_URL).invoke
-      haml = artifact("com.hamptoncatlin.haml:haml:zip:#{HAML_VERSION}").from(tmpfile)
+      haml = download(
+        artifact("com.hamptoncatlin.haml:haml:zip:#{HAML_VERSION}") => HAML_ZIP_URL)
 
       haml_dir = unzip(_("target/resources/haml-#{HAML_VERSION}") => haml).from_path("haml-#{HAML_VERSION}").target
       haml_dir.invoke
