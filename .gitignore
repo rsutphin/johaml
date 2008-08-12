@@ -4,3 +4,4 @@
 */target/*
 */reports/*
 cp-custom-jruby
+*.log
